@@ -32,20 +32,22 @@ def get_vault(uid):
 
 
 def get_cpu_temperature():
-    process = Popen(['vcgencmd', 'measure_temp'], stdout=PIPE)
-    output, _error = process.communicate()
-    return float(output[output.index('=') + 1:output.rindex("'")])
-
+    try:
+        process = Popen(['vcgencmd', 'measure_temp'], stdout=PIPE)
+        output, _error = process.communicate()
+        return float(output[output.index('=') + 1:output.rindex("'")])
+    except:
+        return None
 
 def main():
     uname, pwd = get_vault(uid)
     hname = socket.gethostname()
-    client = mqtt.Client('info')
+    client = mqtt.Client('info_' + hname)
     client.username_pw_set(username=uname, password=pwd)
     try:
         client.connect(HOST, port=1883)
     except:
-        print('Cannot connect to mqtt broker')
+        print('Cannot connect to mqtt broker - retrying')
     
     while True:
         
