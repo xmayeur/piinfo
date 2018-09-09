@@ -39,6 +39,17 @@ def get_cpu_temperature():
     except:
         return None
 
+
+def on_message(client, userdata, message):
+    hname = socket.gethostname()
+    topic = message.topic
+    msg = str(message.payload.decode('utf-8'))
+    print('Received message: ' + topic + '/' + msg)
+    if topic == hname + '/getStatus':
+        print('...')
+        client.publish(hname + '/status', 'alive', qos=0, retain=False)
+
+
 def main():
     uname, pwd = get_vault(uid)
     hname = socket.gethostname()
@@ -48,6 +59,10 @@ def main():
         client.connect(HOST, port=1883)
     except:
         print('Cannot connect to mqtt broker - retrying')
+
+    client.on_message = on_message
+    client.loop_start()
+    client.subscribe(hname + '/getStatus')
     
     while True:
         
