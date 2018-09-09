@@ -63,15 +63,20 @@ def main():
     hname = socket.gethostname()
     client = mqtt.Client('info_' + hname)
     client.username_pw_set(username=uname, password=pwd)
-    client.on_connect = on_connect
-    
-    client.on_message = on_message
-    client.loop_start()
+
+    # connect_flag=True
+
     client.subscribe(hname + '/getStatus')
+    client.on_message = on_message
+
+    client.on_connect = on_connect
+    client.loop_start()
+
 
     try:
         client.connect(HOST, port=1883)
         while not connect_flag:
+            print '+',  # end='')
             sleep(1)
     except:
         print('Cannot connect to mqtt broker - retrying')
@@ -89,6 +94,7 @@ def main():
             try:
                 client.connect(HOST, port=1883)
                 while not connect_flag:
+                    print '.',  # end='')
                     sleep(1)
                 continue
             except:
