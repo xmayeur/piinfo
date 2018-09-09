@@ -1,0 +1,39 @@
+#! /bin/sh
+# /etc/init.d/piinfo
+#
+### BEGIN INIT INFO
+# Provides:          pi resource info
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: pi resource info
+# Description:       Added 1 June 2018
+### END INIT INFO
+# Some things that run always
+touch /var/lock/info
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    echo "Starting script"
+    cd /root
+    /usr/bin/python /root/piinfo/info.pyc &
+    ;;
+  stop)
+    echo "Stopping script"
+    pkill -9 -f info.py
+    exit 0
+    ;;
+  start)
+    piinfo stop
+    sleep 5
+    piinfo start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/piinfo {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
