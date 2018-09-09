@@ -14,6 +14,7 @@ import requests
 HOST = '192.168.0.4'
 vault_url = 'http://192.168.0.4:5000/api/ID'
 uid = 'iot'
+connect_flag = False
 
 
 def get_vault(uid):
@@ -46,23 +47,36 @@ def on_message(client, userdata, message):
     msg = str(message.payload.decode('utf-8'))
     print('Received message: ' + topic + '/' + msg)
     if topic == hname + '/getStatus':
-        print('...')
         client.publish(hname + '/status', 'alive', qos=0, retain=False)
 
 
+def on_connect(client, userdata, flags, rc):
+    global connect_flag
+    if rc == 0:
+        print("connected ok")
+        connect_flag = True
+
+
 def main():
+    global connect_flag
     uname, pwd = get_vault(uid)
     hname = socket.gethostname()
     client = mqtt.Client('info_' + hname)
     client.username_pw_set(username=uname, password=pwd)
-    try:
-        client.connect(HOST, port=1883)
-    except:
-        print('Cannot connect to mqtt broker - retrying')
-
+    client.on_connect = on_connect
+    
     client.on_message = on_message
     client.loop_start()
     client.subscribe(hname + '/getStatus')
+
+    try:
+        client.connect(HOST, port=1883)
+        while not connect_flag:
+            sleep(1)
+    except:
+        print('Cannot connect to mqtt broker - retrying')
+        connect_flag = False
+
     
     while True:
         
@@ -71,11 +85,15 @@ def main():
         try:
             client.publish(hname + '/temperature', str(cpu_temperature), qos=0, retain=False)
         except:
+            connect_flag = False
             try:
                 client.connect(HOST, port=1883)
+                while not connect_flag:
+                    sleep(1)
                 continue
             except:
                 print('Cannot connect to mqtt broker')
+                connect_flag = False
                 sleep(15)
                 continue
         
