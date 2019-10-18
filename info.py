@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from __future__ import division
+from __future__ import print_function
 
 import socket
 from subprocess import PIPE, Popen
@@ -11,8 +12,8 @@ import requests
 
 # from sys import exit
 
-HOST = '192.168.0.4'
-vault_url = 'http://192.168.0.4:5000/api/ID'
+HOST = '192.168.0.7'
+vault_url = 'http://192.168.0.7:5000/api/ID'
 uid = 'iot'
 connect_flag = False
 
@@ -76,7 +77,7 @@ def main():
     try:
         client.connect(HOST, port=1883)
         while not connect_flag:
-            print '+',  # end='')
+            print('+')
             sleep(1)
     except:
         print('Cannot connect to mqtt broker - retrying')
@@ -94,7 +95,7 @@ def main():
             try:
                 client.connect(HOST, port=1883)
                 while not connect_flag:
-                    print '.',  # end='')
+                    print('.')  # ,  end='')
                     sleep(1)
                 continue
             except:
@@ -116,10 +117,11 @@ def main():
         client.publish(hname + '/freeRAM%', str(100 - ram_percent_used), qos=0, retain=False)
         
         disk = psutil.disk_usage('/')
-        disk_total = disk.total / 2 ** 30  # GiB.
-        disk_used = disk.used / 2 ** 30
-        disk_free = disk.free / 2 ** 30
-        disk_percent_used = disk.percent
+
+        # disk_total = disk.total / 2 ** 30  # GiB.
+        # disk_used = disk.used / 2 ** 30
+        # disk_free = disk.free / 2 ** 30
+        # disk_percent_used = disk.percent
         #
         # Print top five processes in terms of virtual memory usage.
         #
