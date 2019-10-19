@@ -2,6 +2,7 @@
 from __future__ import division
 from __future__ import print_function
 
+import argparse
 import socket
 from subprocess import PIPE, Popen
 from time import sleep
@@ -12,7 +13,7 @@ import requests
 
 # from sys import exit
 
-HOST = '192.168.0.7'
+mqtt_host = '192.168.0.7'
 vault_url = 'http://192.168.0.7:5000/api/ID'
 uid = 'iot'
 connect_flag = False
@@ -60,6 +61,23 @@ def on_connect(client, userdata, flags, rc):
 
 def main():
     global connect_flag
+    global mqtt_host
+    global vault_url
+
+    parser = argparse.ArgumentParser(prog='info', description="send cpu, mem info on mqtt")
+
+    parser.add_argument("-m", "--mqtt", required=False,
+                        help="set mqtt server ip address")
+    parser.add_argument("-v", "--vault", required=False,
+                        help="set vault server ip address")
+    args = parser.parse_args()
+
+    if args.mqtt:
+        mqtt_host = args.mqtt
+
+    if args.vault:
+        vault_url = 'http://' + args.vault + ':5000/api/ID'
+    
     uname, pwd = get_vault(uid)
     hname = socket.gethostname()
     client = mqtt.Client('info_' + hname)
@@ -75,7 +93,7 @@ def main():
 
 
     try:
-        client.connect(HOST, port=1883)
+        client.connect(mqtt_host, port=1883)
         while not connect_flag:
             print('+')
             sleep(1)
@@ -93,7 +111,7 @@ def main():
         except:
             connect_flag = False
             try:
-                client.connect(HOST, port=1883)
+                client.connect(mqtt_host, port=1883)
                 while not connect_flag:
                     print('.')  # ,  end='')
                     sleep(1)
