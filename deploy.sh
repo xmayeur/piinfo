@@ -1,4 +1,4 @@
-#/bin/bash
+# /bin/bash
 
 sudo mkdir -p /user/share/piinfo/
 sudo cp -f info.py /user/share/piinfo/info.py
