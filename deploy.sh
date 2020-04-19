@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 sudo mkdir -p /user/share/piinfo/
 sudo cp -f info.py /user/share/piinfo/info.py
@@ -12,4 +12,4 @@ sudo pkill -9 -f info.py
 sudo update-rc.d piinfo defaults
 sudo systemctl enable piinfo
 
-sudo service piinfo start
+sudo service piinfo startsh
