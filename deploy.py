@@ -6,9 +6,8 @@ from fabric.api import *
 
 # from fabric.contrib.project import rsync_project as rsync
 
-
-env.host_string = '192.168.0.5'
-env.user = 'pi'
+env.host_string = '192.168.0.22'
+env.user = 'xavier'
 env.use_ssh_config = True
 
 # Deploy files
