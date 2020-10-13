@@ -17,7 +17,7 @@ FILE = r'piinfo.conf'
 if os.name == 'nt':
     filename = FILE
 else:
-    filename = os.path.join('/etc/default', FILE)
+    filename = os.path.join('/etc', FILE)
 config = oyaml.load(open(filename, 'r'), Loader=oyaml.Loader)
 
 mqtt_host = config['mqtt']['host']

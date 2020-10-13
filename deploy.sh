@@ -1,5 +1,5 @@
 #!/bin/bash
-
+sudo service piinfo stop
 now=`date +%s`
 mkdir -p ./tmp$now
 cd ./tmp$now
