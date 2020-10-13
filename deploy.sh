@@ -3,7 +3,7 @@
 now=`date +%s`
 mkdir -p ./tmp$now
 cd ./tmp$now
-git clone https://github.com/xmayeur/piinfo
+git clone https://github.com/xmayeur/piinfo .
 sudo mkdir -p /user/share/piinfo/
 sudo cp -f info.py /user/share/piinfo/info.py
 sudo cp -f piinfo.conf /etc/default
