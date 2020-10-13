@@ -50,10 +50,10 @@ def get_cpu_temperature():
             output, _error = process.communicate()
             return float(output[output.index('=') + 1:output.rindex("'")])
         elif 'Linux' in system() and 'x86' in machine():
-            process = Popen(['sensor', '-j'], stdout=PIPE)
+            process = Popen(['sensors', '-j'], stdout=PIPE)
             output, error = process.communicate()
             data = json.loads(output)
-            return float(data['coretemp-isa-0000']['Core0']['temp2_input'])
+            return float(data['coretemp-isa-0000']['Core 0']['temp2_input'])
     except:
         return None
 
