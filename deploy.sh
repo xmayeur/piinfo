@@ -6,7 +6,7 @@ cd ./tmp$now
 git clone https://github.com/xmayeur/piinfo .
 sudo mkdir -p /user/share/piinfo/
 sudo cp -f info.py /user/share/piinfo/info.py
-sudo cp -f piinfo.conf /etc/default
+sudo cp -f piinfo.conf /etc
 sudo cp -f piinfo /etc/init.d
 sudo chmod 0755 /etc/init.d/piinfo
 
