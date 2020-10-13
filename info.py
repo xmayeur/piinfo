@@ -5,6 +5,7 @@ from __future__ import print_function
 import json
 import os
 import socket
+from platform import machine, system
 from subprocess import PIPE, Popen
 from time import sleep
 
@@ -44,9 +45,15 @@ def get_vault(uid):
 
 def get_cpu_temperature():
     try:
-        process = Popen(['vcgencmd', 'measure_temp'], stdout=PIPE)
-        output, _error = process.communicate()
-        return float(output[output.index('=') + 1:output.rindex("'")])
+        if 'arm' in machine():
+            process = Popen(['vcgencmd', 'measure_temp'], stdout=PIPE)
+            output, _error = process.communicate()
+            return float(output[output.index('=') + 1:output.rindex("'")])
+        elif 'Linux' in system() and 'x86' in machine():
+            process = Popen(['sensor', '-j'], stdout=PIPE)
+            output, error = process.communicate()
+            data = json.loads(output)
+            return float(data['coretemp-isa-0000']['Core0']['temp2_input'])
     except:
         return None
 
