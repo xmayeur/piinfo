@@ -12,13 +12,13 @@ import psutil
 import requests
 
 # from sys import exit
-
+# TODO use a config file
 mqtt_host = '192.168.0.7'
 vault_url = 'http://192.168.0.7:5000/api/ID'
 uid = 'iot'
 connect_flag = False
 
-
+# TODO use redis DB
 def get_vault(uid):
     # url = config.get('vault', 'vault_url')
     
