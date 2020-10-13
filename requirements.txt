@@ -2,3 +2,5 @@ requests
 paho-mqtt
 psutil
 argparse
+oyaml
+redis

@@ -2,32 +2,40 @@
 from __future__ import division
 from __future__ import print_function
 
-import argparse
+import json
+import os
 import socket
 from subprocess import PIPE, Popen
 from time import sleep
 
+import oyaml
 import paho.mqtt.client as mqtt
 import psutil
-import requests
+import redis
 
-# from sys import exit
-# TODO use a config file
-mqtt_host = '192.168.0.7'
-vault_url = 'http://192.168.0.7:5000/api/ID'
-uid = 'iot'
+FILE = r'piinfo.conf'
+if os.name == 'nt':
+    filename = FILE
+else:
+    filename = os.path.join('/etc/default', FILE)
+config = oyaml.load(open(filename, 'r'), Loader=oyaml.Loader)
+
+mqtt_host = config['mqtt']['host']
+uid = config['mqtt']['uid']
 connect_flag = False
 
-# TODO use redis DB
+
 def get_vault(uid):
-    # url = config.get('vault', 'vault_url')
-    
-    r = requests.get(url=vault_url + '?uid=%s' % uid)
-    id = r.json()
-    r.close()
-    if id['status'] == 200:
-        _username = id['username']
-        _password = id['password']
+    global config
+    host = config['redis']['host']
+    port = config['redis']['port']
+    vaultdb = config['redis']['vaultdb']
+    vault = redis.Redis(host=host, port=port, db=vaultdb)
+    _s = vault.get(uid)
+    _id = json.loads(_s)
+    if id:
+        _username = _id['username']
+        _password = _id['password']
     else:
         _username = ''
         _password = ''
@@ -62,21 +70,6 @@ def on_connect(client, userdata, flags, rc):
 def main():
     global connect_flag
     global mqtt_host
-    global vault_url
-
-    parser = argparse.ArgumentParser(prog='info', description="send cpu, mem info on mqtt")
-
-    parser.add_argument("-m", "--mqtt", required=False,
-                        help="set mqtt server ip address")
-    parser.add_argument("-v", "--vault", required=False,
-                        help="set vault server ip address")
-    args = parser.parse_args()
-
-    if args.mqtt:
-        mqtt_host = args.mqtt
-
-    if args.vault:
-        vault_url = 'http://' + args.vault + ':5000/api/ID'
     
     uname, pwd = get_vault(uid)
     hname = socket.gethostname()
