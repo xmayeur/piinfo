@@ -48,6 +48,7 @@ def get_cpu_temperature():
         if 'arm' in machine():
             process = Popen(['vcgencmd', 'measure_temp'], stdout=PIPE)
             output, _error = process.communicate()
+            output = output.decode()
             return float(output[output.index('=') + 1:output.rindex("'")])
         elif 'Linux' in system() and 'x86' in machine():
             process = Popen(['sensors', '-j'], stdout=PIPE)
@@ -91,7 +92,6 @@ def main():
     client.on_connect = on_connect
     client.loop_start()
 
-
     try:
         client.connect(mqtt_host, port=1883)
         while not connect_flag:
@@ -100,12 +100,11 @@ def main():
     except:
         print('Cannot connect to mqtt broker - retrying')
         connect_flag = False
-
     
     while True:
         
         cpu_temperature = get_cpu_temperature()
-        # print('cpu temperature: ' + str(cpu_temperature) + 'C')
+        print('cpu temperature: ' + str(cpu_temperature) + 'C')
         try:
             client.publish(hname + '/temperature', str(cpu_temperature), qos=0, retain=False)
         except:
