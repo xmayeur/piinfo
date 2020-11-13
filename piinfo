@@ -17,11 +17,11 @@ touch /var/lock/info
 case "$1" in
   start)
     echo "Starting script"
-    /usr/bin/python3 /user/share/piinfo/info.py &
+    /user/share/piinfo/info &
     ;;
   stop)
     echo "Stopping script"
-    pkill -9 -f info.py
+    pkill -9 -f info
     exit 0
     ;;
   restart)
