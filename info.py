@@ -22,6 +22,8 @@ else:
 config = oyaml.load(open(filename, 'r'), Loader=oyaml.Loader)
 
 mqtt_host = config['mqtt']['host']
+mqtt_port = config['mqtt']['port']
+
 uid = config['mqtt']['uid']
 connect_flag = False
 
@@ -93,7 +95,7 @@ def main():
     client.loop_start()
 
     try:
-        client.connect(mqtt_host, port=1883)
+        client.connect(mqtt_host, port=mqtt_port)
         while not connect_flag:
             print('+')
             sleep(1)
