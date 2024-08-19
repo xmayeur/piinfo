@@ -4,13 +4,13 @@ now=`date +%s`
 # mkdir -p ./tmp$now
 # cd ./tmp$now
 
-git clone https://github.com/xmayeur/piinfo .
+# git clone https://github.com/xmayeur/piinfo .
 sudo pip install -r requirements.txt
 pyinstaller -F info.py
 sudo mkdir -p /user/share/piinfo/
 sudo cp -f ./dist/info /user/share/piinfo/info
 sudo chmod 0755  /user/share/piinfo/info
-sudo cp -f piinfo.conf /etc
+# sudo cp -f piinfo.conf /etc
 sudo cp -f piinfo /etc/init.d
 sudo chmod 0755 /etc/init.d/piinfo
 
