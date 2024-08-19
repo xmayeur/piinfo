@@ -1,11 +1,11 @@
 #!/bin/bash
 sudo service piinfo stop
 now=`date +%s`
-mkdir -p ./tmp$now
-cd ./tmp$now
+# mkdir -p ./tmp$now
+# cd ./tmp$now
 
 git clone https://github.com/xmayeur/piinfo .
-sudo pip3 install -r requirements.txt
+sudo pip install -r requirements.txt
 pyinstaller -F info.py
 sudo mkdir -p /user/share/piinfo/
 sudo cp -f ./dist/info /user/share/piinfo/info
@@ -20,5 +20,5 @@ sudo update-rc.d piinfo defaults
 sudo systemctl enable piinfo
 
 sudo service piinfo start
-cd ..
-rm -fr ./tmp$now
+# cd ..
+#  rm -fr ./tmp$now
