@@ -1,3 +1,4 @@
 paho-mqtt
 psutil
 get_hc_secrets
+pyinstaller
