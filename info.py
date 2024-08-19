@@ -19,7 +19,7 @@ connect_flag = False
 
 def get_cpu_temperature():
     try:
-        if 'arm' in machine():
+        if 'arm' in machine() or 'aarch64' in machine():
             process = Popen(['vcgencmd', 'measure_temp'], stdout=PIPE)
             output, _error = process.communicate()
             output = output.decode()
