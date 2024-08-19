@@ -42,7 +42,7 @@ def on_message(client, userdata, message):
         client.publish(hname + '/status', 'alive', qos=0, retain=False)
 
 
-def on_connect(client, userdata, flags, rc):
+def on_connect(client, userdata, flags, rc, properties=None):
     global connect_flag
     if rc == 0:
         print("connected ok")
