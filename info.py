@@ -114,8 +114,8 @@ def main():
         ram_used = ram.used / 2 ** 20
         ram_free = ram.free / 2 ** 20
         ram_percent_used = ram.percent
-        print('free ram: ' + str(100 - ram_percent_used) + '%')
-        client.publish(hname + '/freeRAM%', str(100 - ram_percent_used), qos=0, retain=False)
+        print('free ram: ' + str(int(100 - ram_percent_used)) + '%')
+        client.publish(hname + '/freeRAM%', str(int(100 - ram_percent_used)), qos=0, retain=False)
         
         disk = psutil.disk_usage('/')
 
