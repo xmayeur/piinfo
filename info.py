@@ -65,7 +65,7 @@ def main():
         sys.exit(1)
 
     hname = socket.gethostname()
-    client = mqtt.Client('info_' + hname)
+    client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     client.username_pw_set(username=username, password=password)
 
     # connect_flag=True
