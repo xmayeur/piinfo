@@ -3,46 +3,18 @@ from __future__ import division
 from __future__ import print_function
 
 import json
-import os
+import logging as log
 import socket
+import sys
 from platform import machine, system
 from subprocess import PIPE, Popen
 from time import sleep
 
-import oyaml
 import paho.mqtt.client as mqtt
 import psutil
-import redis
+from getSecrets import get_secret
 
-FILE = r'piinfo.conf'
-if os.name == 'nt':
-    filename = FILE
-else:
-    filename = os.path.join('/etc', FILE)
-config = oyaml.load(open(filename, 'r'), Loader=oyaml.Loader)
-
-mqtt_host = config['mqtt']['host']
-mqtt_port = config['mqtt']['port']
-
-uid = config['mqtt']['uid']
 connect_flag = False
-
-
-def get_vault(uid):
-    global config
-    host = config['redis']['host']
-    port = config['redis']['port']
-    vaultdb = config['redis']['vaultdb']
-    vault = redis.Redis(host=host, port=port, db=vaultdb)
-    _s = vault.get(uid)
-    _id = json.loads(_s)
-    if id:
-        _username = _id['username']
-        _password = _id['password']
-    else:
-        _username = ''
-        _password = ''
-    return _username, _password
 
 
 def get_cpu_temperature():
@@ -79,12 +51,22 @@ def on_connect(client, userdata, flags, rc):
 
 def main():
     global connect_flag
-    global mqtt_host
-    
-    uname, pwd = get_vault(uid)
+
+    try:
+        mqtt_config = get_secret('mqtt')
+        username = mqtt_config['username']
+        password = mqtt_config['password']
+        host = mqtt_config['host']
+        port = int(mqtt_config['port'])
+        protocol = "mqtt"  # if port == 1883 else "mqtts"
+        mqtt_url = f"{protocol}://{username}:{password}@{host}:{port}"
+    except (OSError, KeyError) as e:
+        log.error('Error on mqtt config data\n %s', e)
+        sys.exit(1)
+
     hname = socket.gethostname()
     client = mqtt.Client('info_' + hname)
-    client.username_pw_set(username=uname, password=pwd)
+    client.username_pw_set(username=username, password=password)
 
     # connect_flag=True
 
@@ -95,7 +77,7 @@ def main():
     client.loop_start()
 
     try:
-        client.connect(mqtt_host, port=mqtt_port)
+        client.connect(host, port=port)
         while not connect_flag:
             print('+')
             sleep(1)
@@ -112,7 +94,7 @@ def main():
         except:
             connect_flag = False
             try:
-                client.connect(mqtt_host, port=1883)
+                client.connect(host, port=port)
                 while not connect_flag:
                     print('.')  # ,  end='')
                     sleep(1)
