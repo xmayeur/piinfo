@@ -5,8 +5,8 @@ now=`date +%s`
 # cd ./tmp$now
 
 # git clone https://github.com/xmayeur/piinfo .
-sudo pip install -r requirements.txt
-pyinstaller -F info.py
+# sudo pip install -r requirements.txt
+# pyinstaller -F info.py
 sudo mkdir -p /user/share/piinfo/
 sudo cp -f ./dist/info /user/share/piinfo/info
 sudo chmod 0755  /user/share/piinfo/info
