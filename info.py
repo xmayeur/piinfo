@@ -106,7 +106,7 @@ def main():
                 continue
         
         cpu_usage = psutil.cpu_percent()
-        # print('cpu usage: ' + str(cpu_usage) + '%')
+        print('cpu usage: ' + str(cpu_usage) + '%')
         client.publish(hname + '/CPU%', str(cpu_usage), qos=0, retain=False)
         
         ram = psutil.virtual_memory()
@@ -114,7 +114,7 @@ def main():
         ram_used = ram.used / 2 ** 20
         ram_free = ram.free / 2 ** 20
         ram_percent_used = ram.percent
-        # print('free ram: ' + str(100-ram_percent_used) + '%')
+        print('free ram: ' + str(100 - ram_percent_used) + '%')
         client.publish(hname + '/freeRAM%', str(100 - ram_percent_used), qos=0, retain=False)
         
         disk = psutil.disk_usage('/')
