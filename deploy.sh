@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 sudo service piinfo stop
 now=`date +%s`
 # mkdir -p ./tmp$now
