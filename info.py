@@ -87,7 +87,7 @@ def main():
     client.on_message = on_message
 
     client.on_connect = on_connect
-    client.loop_forever()
+    client.loop_start()
 
     try:
         client.connect(host, port=port)
