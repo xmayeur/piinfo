@@ -65,7 +65,7 @@ def main():
                 raise Exception('Empty MQTT config')
             break
         except Exception as e:
-            log.warning('Vault not ready')
+            log.warning(f'Vault not ready - {e}')
             sleep(10)
 
     try:
