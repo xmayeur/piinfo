@@ -61,6 +61,7 @@ def main():
     while True:
         try:
             mqtt_config = get_secret('mqtt')
+            log.info(mqtt_config)
             break
         except Exception as e:
             log.warning('Vault not ready')
