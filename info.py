@@ -65,7 +65,7 @@ def main():
         except Exception as e:
             log.warning('Vault not ready')
             sleep(10)
-            continue
+
     try:
         username = mqtt_config['username']
         password = mqtt_config['password']
