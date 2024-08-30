@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 from __future__ import division
 from __future__ import print_function
 
@@ -49,11 +50,23 @@ def on_connect(client, userdata, flags, rc, properties=None):
         connect_flag = True
 
 
+def on_disconnect(client, userdata, rc):
+    if rc != 0:
+        log.warning("Unexpected MQTT disconnection. Will auto-reconnect")
+
 def main():
     global connect_flag
 
+    # Wait for the vault being ready
+    while True:
+        try:
+            mqtt_config = get_secret('mqtt')
+            break
+        except Exception as e:
+            log.warning('Vault not ready')
+            sleep(10)
+            continue
     try:
-        mqtt_config = get_secret('mqtt')
         username = mqtt_config['username']
         password = mqtt_config['password']
         host = mqtt_config['host']
@@ -74,7 +87,7 @@ def main():
     client.on_message = on_message
 
     client.on_connect = on_connect
-    client.loop_start()
+    client.loop_forever()
 
     try:
         client.connect(host, port=port)
