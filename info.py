@@ -69,7 +69,7 @@ def main():
             sleep(10)
 
     try:
-        print(mqtt_config)
+        # print(mqtt_config)
         username = mqtt_config['username']
         password = mqtt_config['password']
         host = mqtt_config['host']
