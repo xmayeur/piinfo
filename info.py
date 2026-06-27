@@ -15,6 +15,20 @@ import paho.mqtt.client as mqtt
 import psutil
 from getSecrets import get_secret
 
+
+def getIP(d):
+    """
+    This method returns the first IP address string
+    that responds as the given domain name
+    """
+    try:
+        data = socket.gethostbyname(d)
+        ip = repr(data)
+        return ip
+    except Exception:
+        # fail gracefully!
+        return False
+
 connect_flag = False
 
 
@@ -72,7 +86,8 @@ def main():
         # print(mqtt_config)
         username = mqtt_config['username']
         password = mqtt_config['password']
-        host = mqtt_config['host']
+        host = getIP(mqtt_config['host']).replace("'", "")
+
         port = int(mqtt_config['port'])
         protocol = "mqtt"  # if port == 1883 else "mqtts"
         mqtt_url = f"{protocol}://{username}:{password}@{host}:{port}"
